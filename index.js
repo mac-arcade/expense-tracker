@@ -106,6 +106,29 @@ app.post("/expenses", validateExpense, (req, res) => {
     });
 });
 
+app.delete("/expenses/:id", (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const index = expenses.findIndex((expense) => expense.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({
+            success: false,
+            message: `Expense with id ${id} is not found`
+        });
+    }
+
+    const deletedExpense = expenses.splice(index, 1)[0];
+
+    res.status(200).json({
+        success: true,
+        message: `Expense with id ${id} is deleted successfully`,
+        data: deletedExpense
+    });
+
+});
+
 // Start app
 app.listen(port, () => {
     console.log(`Server is started at http://localhost:${port}`);
