@@ -31,11 +31,29 @@ const validateExpense = (req, res, next) => {
     next();
 }
 
+const apiChecker = (req, res, next) => {
+
+    // const apiKey = req.headers["x-api-key"];
+    const apiKey = req.header("x-api-key");
+
+    if (!apiKey || apiKey !== "12345") {
+
+        return res.status(401).json({
+            success: false,
+            message: "api key is missing or incorrect, please use correct api key"
+        });
+    }
+
+    next();
+}
+
 // Middleware to parse json
 app.use(express.json());
 
 // Custom middleware to log 
 app.use(logger);
+
+app.use("/expenses", apiChecker);
 
 const expenses = [
     {
