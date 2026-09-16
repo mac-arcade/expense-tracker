@@ -23,9 +23,56 @@ app.use(express.json());
 // Custom middleware to log 
 app.use(logger);
 
+const expenses = [
+    {
+        id: 1,
+        title: "Lunch",
+        amount: 150,
+        category: "Food"
+    },
+    {
+        id: 2,
+        title: "Bus Ticket",
+        amount: 50,
+        category: "Travel"
+    },
+    {
+        id: 3,
+        title: "Shoes",
+        amount: 600,
+        category: "Shopping"
+    }
+];
+
 // Default home route
 app.get("/", (req, res) => {
     res.status(200).send("Expense Tracker API");
+});
+
+app.get("/expenses", (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: expenses
+    });
+});
+
+app.get("/expenses/:id", (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const expense = expenses.find((expense) => expense.id === id);
+
+    if (!expense) {
+        return res.status(404).json({
+            success: false,
+            message: `Expense with id ${id} is not found`
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        data: expense
+    });
 });
 
 // Start app
