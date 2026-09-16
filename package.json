@@ -1,0 +1,23 @@
+{
+  "name": "expense-tracker",
+  "version": "1.0.0",
+  "description": "Mini Expense Tracker API",
+  "homepage": "https://github.com/mac-arcade/expense-tracker#readme",
+  "bugs": {
+    "url": "https://github.com/mac-arcade/expense-tracker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mac-arcade/expense-tracker.git"
+  },
+  "license": "ISC",
+  "author": "Mehul Kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
