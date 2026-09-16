@@ -47,6 +47,21 @@ const apiChecker = (req, res, next) => {
     next();
 }
 
+const validateId = (req, res, next) => {
+
+    const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            message: "please enter valid id Number"
+        });
+    }
+
+    next();
+
+}
+
 // Middleware to parse json
 app.use(express.json());
 
@@ -54,6 +69,8 @@ app.use(express.json());
 app.use(logger);
 
 app.use("/expenses", apiChecker);
+
+app.use("/expenses/:id", validateId);
 
 const expenses = [
     {
