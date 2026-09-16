@@ -17,6 +17,20 @@ const logger = (req, res, next) => {
     next();
 };
 
+const validateExpense = (req, res, next) => {
+
+    const { title, amount, category } = req.body;
+
+    if (!title || amount == undefined || amount == "" || !category) {
+        return res.status(400).json({
+            success: false,
+            message: `Data Missing - title: ${title}, amount: ${amount}, category: ${category}`
+        });
+    }
+
+    next();
+}
+
 // Middleware to parse json
 app.use(express.json());
 
@@ -71,6 +85,23 @@ app.get("/expenses/:id", (req, res) => {
 
     return res.status(200).json({
         success: true,
+        data: expense
+    });
+});
+
+app.post("/expenses", validateExpense, (req, res) => {
+
+    const { title, amount, category } = req.body;
+
+    const id = expenses.reduce((max, expense) => expense.id > max ? expense.id : max, 0) + 1;
+
+    const expense = { id, title, amount, category };
+
+    expenses.push(expense);
+
+    res.status(201).json({
+        success: true,
+        message: "New expense added successfully",
         data: expense
     });
 });
