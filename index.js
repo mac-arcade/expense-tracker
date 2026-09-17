@@ -40,6 +40,8 @@ app.use((req, res) => {
 
 // Start the server and listen for incoming requests
 app.listen(port, () => {
-    console.log(`Server is started at http://localhost:${port}`);
+    console.log(
+        `Server is started at http://localhost:${port}`
+    );
 });
 
