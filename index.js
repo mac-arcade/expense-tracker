@@ -7,60 +7,13 @@ const app = express();
 // Give PORT number
 const port = process.env.port || 3000;
 
+const logger = require("./middleware/logger");
 
-const logger = (req, res, next) => {
+const apiChecker = require("./middleware/apiChecker");
 
-    const time = new Date().toLocaleTimeString();
+const validateId = require("./middleware/validateId");
 
-    console.log(`[${time}] ${req.method} ${req.url}`);
-
-    next();
-};
-
-const validateExpense = (req, res, next) => {
-
-    const { title, amount, category } = req.body;
-
-    if (!title || amount == undefined || amount == "" || !category) {
-        return res.status(400).json({
-            success: false,
-            message: `Data Missing - title: ${title}, amount: ${amount}, category: ${category}`
-        });
-    }
-
-    next();
-}
-
-const apiChecker = (req, res, next) => {
-
-    // const apiKey = req.headers["x-api-key"];
-    const apiKey = req.header("x-api-key");
-
-    if (!apiKey || apiKey !== "12345") {
-
-        return res.status(401).json({
-            success: false,
-            message: "api key is missing or incorrect, please use correct api key"
-        });
-    }
-
-    next();
-}
-
-const validateId = (req, res, next) => {
-
-    const id = Number(req.params.id);
-
-    if (Number.isNaN(id)) {
-        return res.status(400).json({
-            success: false,
-            message: "please enter valid id Number"
-        });
-    }
-
-    next();
-
-}
+const validateExpense = require("./middleware/validateExpense");
 
 // Middleware to parse json
 app.use(express.json());
