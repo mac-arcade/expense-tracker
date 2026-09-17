@@ -9,12 +9,22 @@ const validateExpense = (req, res, next) => {
 
     // Reject the request if required fields are missing
     // or if amount cannot be converted to a valid number
-    if (!title || Number.isNaN(amount) || !category) {
+    if (
+        !title ||
+        !title.trim() ||
+        !category ||
+        !category.trim() ||
+        Number.isNaN(amount) ||
+        amount <= 0
+    ) {
         return res.status(400).json({
             success: false,
-            message: `Data Missing - title: ${title}, amount: ${amount}, category: ${category}`
+            message: `Invalid expense data - title: ${title}, amount: ${amount}, category: ${category}`
         });
     }
+
+    // Normalize the amount to store it as a Number not string
+    req.body.amount = amount;
 
     // Validation passed, continue to the next middleware or route handler
     next();
