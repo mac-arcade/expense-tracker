@@ -1,0 +1,22 @@
+{
+  "expenses": [
+    {
+      "id": 1,
+      "title": "Lunch",
+      "amount": 150,
+      "category": "Food"
+    },
+    {
+      "id": 2,
+      "title": "Bus Ticket",
+      "amount": 50,
+      "category": "Travel"
+    },
+    {
+      "id": 3,
+      "title": "Shoes",
+      "amount": 600,
+      "category": "Shopping"
+    }
+  ]
+}

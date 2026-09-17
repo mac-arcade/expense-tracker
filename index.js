@@ -7,13 +7,11 @@ const app = express();
 // Give PORT number
 const port = process.env.port || 3000;
 
+const expenseRouter = require("./routes/expenses")
+
 const logger = require("./middleware/logger");
 
 const apiChecker = require("./middleware/apiChecker");
-
-const validateId = require("./middleware/validateId");
-
-const validateExpense = require("./middleware/validateExpense");
 
 // Middleware to parse json
 app.use(express.json());
@@ -21,100 +19,19 @@ app.use(express.json());
 // Custom middleware to log 
 app.use(logger);
 
-app.use("/expenses", apiChecker);
+// redirect to expense routes
+app.use("/expenses", apiChecker, expenseRouter);
 
-app.use("/expenses/:id", validateId);
-
-const expenses = [
-    {
-        id: 1,
-        title: "Lunch",
-        amount: 150,
-        category: "Food"
-    },
-    {
-        id: 2,
-        title: "Bus Ticket",
-        amount: 50,
-        category: "Travel"
-    },
-    {
-        id: 3,
-        title: "Shoes",
-        amount: 600,
-        category: "Shopping"
-    }
-];
 
 // Default home route
 app.get("/", (req, res) => {
     res.status(200).send("Expense Tracker API");
 });
 
-app.get("/expenses", (req, res) => {
-    res.status(200).json({
-        success: true,
-        data: expenses
+app.use((req, res) => {
+    return res.status(404).json({
+        message: `This route does not exists`
     });
-});
-
-app.get("/expenses/:id", (req, res) => {
-
-    const id = Number(req.params.id);
-
-    const expense = expenses.find((expense) => expense.id === id);
-
-    if (!expense) {
-        return res.status(404).json({
-            success: false,
-            message: `Expense with id ${id} is not found`
-        });
-    }
-
-    return res.status(200).json({
-        success: true,
-        data: expense
-    });
-});
-
-app.post("/expenses", validateExpense, (req, res) => {
-
-    const { title, amount, category } = req.body;
-
-    const id = expenses.reduce((max, expense) => expense.id > max ? expense.id : max, 0) + 1;
-
-    const expense = { id, title, amount, category };
-
-    expenses.push(expense);
-
-    res.status(201).json({
-        success: true,
-        message: "New expense added successfully",
-        data: expense
-    });
-});
-
-app.delete("/expenses/:id", (req, res) => {
-
-    const id = Number(req.params.id);
-
-    const index = expenses.findIndex((expense) => expense.id === id);
-
-    if (index === -1) {
-        return res.status(404).json({
-            success: false,
-            message: `Expense with id ${id} is not found`
-        });
-    }
-
-    const deletedExpense = expenses.splice(index, 1)[0];
-
-    res.status(200).json({
-        success: true,
-        message: `Expense with id ${id} is deleted successfully`,
-        data: deletedExpense
-    });
-
 });
 
 // Start app
